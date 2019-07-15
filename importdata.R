@@ -1,3 +1,4 @@
+
 library(R.matlab)
 library(lme4)
 library(Rmisc)
@@ -8,22 +9,22 @@ rm(list=ls())
 
 
 #rerun these if you need to
-resultdata1 <- readMat("../resultdata1.mat")
+resultdata1 <- readMat("resultdata1.mat")
 resultdata1 <- resultdata1$resultdata
-resultinfo1 <- read.csv("../resultinfo1.csv")
+resultinfo1 <- read.csv("resultinfo1.csv")
 
 levels(resultinfo1) <- 1:length(levels(resultinfo1))
 
-resultdata2 <- readMat("../resultdata2.mat")
+resultdata2 <- readMat("resultdata2.mat")
 resultdata2 <- resultdata2$resultdata
-resultinfo2 <- read.csv("../resultinfo2.csv")
+resultinfo2 <- read.csv("resultinfo2.csv")
 
 levels(resultinfo2) <- 1:length(levels(resultinfo2))
 
 
-resultdata3 <- readMat("../resultdata3.mat")
+resultdata3 <- readMat("resultdata3.mat")
 resultdata3 <- resultdata3$resultdata
-resultinfo3 <- read.csv("../resultinfo3.csv")
+resultinfo3 <- read.csv("resultinfo3.csv")
 
 resultinfo3$plabel <- resultinfo3$pname
 resultinfo3$pname <- as.factor(substr(resultinfo3$plabel, 2,2))
