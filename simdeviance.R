@@ -10,3 +10,6 @@
 #     approx(observed,x,y,method="linear")
 #   - Compute deviance: log, sum, times -2
 
+#load some simulations
+
+simeasy <- readMat("Simulations/auceasymd4.mat")[1]

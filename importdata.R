@@ -9,7 +9,7 @@ rm(list=ls())
 
 
 #rerun these if you need to
-resultdata1 <- readMat("resultdata1.mat")
+resultdata1 <- readMat("Data\resultdata1.mat")
 resultdata1 <- resultdata1$resultdata
 resultinfo1 <- read.csv("resultinfo1.csv")
 
@@ -22,9 +22,9 @@ resultinfo2 <- read.csv("resultinfo2.csv")
 levels(resultinfo2) <- 1:length(levels(resultinfo2))
 
 
-resultdata3 <- readMat("resultdata3.mat")
+resultdata3 <- readMat("Data/resultdata3.mat")
 resultdata3 <- resultdata3$resultdata
-resultinfo3 <- read.csv("resultinfo3.csv")
+resultinfo3 <- read.csv("Data/resultinfo3.csv")
 
 resultinfo3$plabel <- resultinfo3$pname
 resultinfo3$pname <- as.factor(substr(resultinfo3$plabel, 2,2))
