@@ -12,4 +12,20 @@
 
 #load some simulations
 
-simeasy <- readMat("Simulations/auceasymd4.mat")[1]
+simhard<- readMat("Simulations/auchardmd4SIM.mat")
+
+simhard <- simhard$auc
+
+dens <- density(simhard$auc, n=1024, from=0, to=max(simhard$auc), na.rm=T) #density of simulated
+
+x <- dens$x
+y <- dens$y
+
+
+
+exphard <- resultinfo3[resultinfo3$Difficulty=="Hrd" &
+                         resultinfo3$pname==3,"AUC"]
+
+interpolated <- approx(x, y, exphard, method='linear')
+
+#problem is that a lot of experimental AUCs are negative

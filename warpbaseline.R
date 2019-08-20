@@ -48,3 +48,36 @@ for (i in 1:dim(tracks)[1])
 }
 
 #now you have modified tracks in trackW! Yay.
+
+#now get the AUCs for each of these...
+
+plot(trackW[1,1,], trackW[1,2,], type='l')
+for (i in c(6)){
+  points(trackW[i,1,2:5], trackW[i,2,2:5], type='l')
+}
+
+#right we have to back to the "track sectioner" -
+#probably easier than before as we know the start and end points.
+plot()
+for (i in 1:dim(trackW)[1]){
+  track <- trackW[i,,]                            #get current trajectory
+  isabove <- atan2(track[2,], track[1,])>pi/3     #find data points that are above or below perfect trajectory line
+  isabove[1] <- isabove[2]                        #first and last will be on line - correct for spurious changes
+  isabove[101] <- isabove[100]
+  secstarts <- c(1,which(diff(isabove)!=0)+1)     #at which points does each section of track start and end?
+  secends <- c(which(diff(isabove)!=0),101)
+  crosspoints <- rbind(poly_crossings(perfect,track), c(0.5, sin(pi/3))) #find where sections end.
+  
+  auc <- 0
+  
+  for (j in 1:length(secstarts))
+  {
+    #for section j
+    xs <- c(crosspoints[j,1], track[1,secstarts[j]:secends[j]], crosspoints[j+1,1])
+    ys <- c(crosspoints[j,2], track[2,secstarts[j]:secends[j]], crosspoints[j+1,2])
+    auc <- auc - polyarea(xs,ys)  #NB polyarea expects counterclockwise values
+  }
+  
+  print(auc)
+}
+
