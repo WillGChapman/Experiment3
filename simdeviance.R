@@ -22,10 +22,16 @@ x <- dens$x
 y <- dens$y
 
 
-
+#get a list of relevant AUCs
 exphard <- resultinfo3[resultinfo3$Difficulty=="Hrd" &
                          resultinfo3$pname==3,"AUC"]
 
+#use the experimental AUCs and see where tey
 interpolated <- approx(x, y, exphard, method='linear')
 
-#problem is that a lot of experimental AUCs are negative
+#problem is that a lot of experimental AUCs are negative (tackle that later)
+
+#to get the deviance of the simulation from the experimental data
+
+modely <- interpolated$y
+
