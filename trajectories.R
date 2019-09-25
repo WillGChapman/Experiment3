@@ -45,10 +45,12 @@ trajectories <- function(walks)
       
       #get decision variable
       z <- walks[trnum,t]
-      print(zdec)
+      #print(z)
+      
+      #model 4 bias on decision variable
       
       
-      
+      ##
       
       focus <- x1*(z<b[1]) + (x2*abs(b[1]-z)/abs(2*b[1]) + x1*abs(b[2]-z)/abs(2*b[2]))*(z>=b[1] & z<=b[2]) + x2*(z>b[2]) 
       
@@ -77,8 +79,8 @@ trajectories <- function(walks)
       deltaXY <- v*movedir #movement by 1*v along direction
       efpos <- rbind(efpos,efposnow + deltaXY) #change to effector position along movedir direction by v
       
-      #has effector reached target if so terminate while loop
-      if (Norm(focus-efpos)<v/2) dec=1
+      #has effector reached target? if so terminate while loop THIS IS NOT WORKING YET
+      dec <- 0 + 1*(Norm(efposnow-x1)<v/2) + 2*(Norm(efposnow-x2)<v/2)
       if (t==500) dec=2
     }
     listoftraj[[trnum]] <- efpos
@@ -86,3 +88,4 @@ trajectories <- function(walks)
   return(listoftraj)
 }
 
+trajectories(walks)
