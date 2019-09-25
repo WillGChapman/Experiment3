@@ -14,9 +14,11 @@
 
 simhard<- readMat("Simulations/auchardmd4SIM.mat")
 
-simhard <- simhard$auc
+simhard <- simhard$auc #strip nonAUC infor from data
 
 dens <- density(simhard$auc, n=1024, from=0, to=max(simhard$auc), na.rm=T) #density of simulated
+
+dens <- density(simhard, n=1024, from=0, to=max(simhard), na.rm=T) #density of simulated
 
 x <- dens$x
 y <- dens$y
@@ -26,12 +28,15 @@ y <- dens$y
 exphard <- resultinfo3[resultinfo3$Difficulty=="Hrd" &
                          resultinfo3$pname==3,"AUC"]
 
+
+
 #use the experimental AUCs and see where tey
 interpolated <- approx(x, y, exphard, method='linear')
 
 #problem is that a lot of experimental AUCs are negative (tackle that later)
 
-#to get the deviance of the simulation from the experimental data
+#to get the likelihood of the simulation from the experimental data
 
 modely <- interpolated$y
 
+sum(log(modely), na.rm = TRUE)
