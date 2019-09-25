@@ -49,6 +49,7 @@ trajectories <- function(walks)
       
       
       
+      
       focus <- x1*(z<b[1]) + (x2*abs(b[1]-z)/abs(2*b[1]) + x1*abs(b[2]-z)/abs(2*b[2]))*(z>=b[1] & z<=b[2]) + x2*(z>b[2]) 
       
       
