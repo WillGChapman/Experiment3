@@ -3,7 +3,7 @@ trajectories <- function(walks)
   ntr <- dim(walks)[1]
   nt <- dim(walks)[2]
   
-  b <- 40#c(-1,1)
+  b <- c(-40,40)#c(-1,1)
   
   v <- 0.05 #movement velocity
   w <- 1    #width between targets
@@ -55,21 +55,21 @@ trajectories <- function(walks)
       focus <- x1*(z<b[1]) + (x2*abs(b[1]-z)/abs(2*b[1]) + x1*abs(b[2]-z)/abs(2*b[2]))*(z>=b[1] & z<=b[2]) + x2*(z>b[2]) 
       
       
-      #if zdec is over or under boundary set focus at x1 or x2
-      if (zdec>b) focus = x1
-      if (zdec<(-b)) focus = x2
-      
-      #if zdec is between boundaries, weighted sum of diff between z and b
-      
-      if (zdec<b || zdec>-b)
-      {
-        #model4 bias z in terms of closeness to targets - comment out next two lines to return to model 3
-        #gain <- 4*b
-        #zdec <- zdec+gain*(Norm(efpos-x1)-Norm(efpos-x2))/(Norm(efpos-x1)+Norm(efpos-x2))
-        
-        focus[1] = abs(b-zdec)*x1[1] +abs(b+zdec)*x2[1] #set focus in x to weighted sum of decision vs width
-        focus[2] = ht
-      }
+      # #if zdec is over or under boundary set focus at x1 or x2
+      # if (zdec>b) focus = x1
+      # if (zdec<(-b)) focus = x2
+      # 
+      # #if zdec is between boundaries, weighted sum of diff between z and b
+      # 
+      # if (zdec<b || zdec>-b)
+      # {
+      #   #model4 bias z in terms of closeness to targets - comment out next two lines to return to model 3
+      #   #gain <- 4*b
+      #   #zdec <- zdec+gain*(Norm(efpos-x1)-Norm(efpos-x2))/(Norm(efpos-x1)+Norm(efpos-x2))
+      #   
+      #   focus[1] = abs(b-zdec)*x1[1] +abs(b+zdec)*x2[1] #set focus in x to weighted sum of decision vs width
+      #   focus[2] = ht
+      # }
       
       #focus is now either on a target, or somewhere between
       #now within each timestep the focus moves at v towards focus
