@@ -1,9 +1,9 @@
-trajectories <- function(walks)
+trajectories <- function(walks, decbound = 40, model4 = TRUE)
 {
   ntr <- dim(walks)[1]
   nt <- dim(walks)[2]
   
-  b <- c(-40,40)#c(-1,1)
+  b <- c(-decbound,decbound)#c(-1,1)
   
   v <- 0.05 #movement velocity
   w <- 1    #width between targets
@@ -20,7 +20,7 @@ trajectories <- function(walks)
   #for each walk
   for (trnum in 1:ntr)
   {
-    print(trnum)
+    if(rem(trnum,10)==0) {disp(num2str(trnum, fmt=0))}
     #focus position at start
     focus <- c(0,0)
     
@@ -31,13 +31,12 @@ trajectories <- function(walks)
     dec <- 0
     t <- 0
     
-    trajs <- list(NULL)
+    deccount <- numeric()
     
     while (dec==0)
     {
       #x and y are coordinates
       t <- t+1 #increment timestep
-      print(t)
       #get current efpos
       efposnow <- efpos[t,]
       
@@ -45,31 +44,13 @@ trajectories <- function(walks)
       
       #get decision variable
       z <- walks[trnum,t]
-      #print(z)
       
       #model 4 bias on decision variable
-      
+      if (model4==TRUE) z = z + 4*decbound*((Norm(efposnow-x1)-Norm(efposnow-x2))/(Norm(efposnow-x1)+Norm(efposnow-x2)))
       
       ##
       
       focus <- x1*(z<b[1]) + (x2*abs(b[1]-z)/abs(2*b[1]) + x1*abs(b[2]-z)/abs(2*b[2]))*(z>=b[1] & z<=b[2]) + x2*(z>b[2]) 
-      
-      
-      # #if zdec is over or under boundary set focus at x1 or x2
-      # if (zdec>b) focus = x1
-      # if (zdec<(-b)) focus = x2
-      # 
-      # #if zdec is between boundaries, weighted sum of diff between z and b
-      # 
-      # if (zdec<b || zdec>-b)
-      # {
-      #   #model4 bias z in terms of closeness to targets - comment out next two lines to return to model 3
-      #   #gain <- 4*b
-      #   #zdec <- zdec+gain*(Norm(efpos-x1)-Norm(efpos-x2))/(Norm(efpos-x1)+Norm(efpos-x2))
-      #   
-      #   focus[1] = abs(b-zdec)*x1[1] +abs(b+zdec)*x2[1] #set focus in x to weighted sum of decision vs width
-      #   focus[2] = ht
-      # }
       
       #focus is now either on a target, or somewhere between
       #now within each timestep the focus moves at v towards focus
@@ -79,13 +60,18 @@ trajectories <- function(walks)
       deltaXY <- v*movedir #movement by 1*v along direction
       efpos <- rbind(efpos,efposnow + deltaXY) #change to effector position along movedir direction by v
       
-      #has effector reached target? if so terminate while loop THIS IS NOT WORKING YET
-      dec <- 0 + 1*(Norm(efposnow-x1)<v/2) + 2*(Norm(efposnow-x2)<v/2)
-      if (t==500) dec=2
+      #has effector reached target? if so terminate while loop
+      deccount[t] <- 0 + 1*(Norm(efposnow-x1)<v/2) + 2*(Norm(efposnow-x2)<v/2)
+      dec <- deccount[t]
+      if (t==nt) dec=3
     }
-    listoftraj[[trnum]] <- efpos
+    trialresult <- list(efpos, deccount)
+    
+    listoftraj[["effectorpos"]][[trnum]] <- efpos
+    listoftraj[["targetreached"]][[trnum]] <- length(deccount)
+    listoftraj[["decision"]][[trnum]] <- dec
   }
   return(listoftraj)
 }
 
-trajectories(walks)
+trajs <- trajectories(walks)
