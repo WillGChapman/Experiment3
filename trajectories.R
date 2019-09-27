@@ -61,15 +61,28 @@ trajectories <- function(walks, decbound = 40, model4 = TRUE)
       efpos <- rbind(efpos,efposnow + deltaXY) #change to effector position along movedir direction by v
       
       #has effector reached target? if so terminate while loop
-      deccount[t] <- 0 + 1*(Norm(efposnow-x1)<v/2) + 2*(Norm(efposnow-x2)<v/2)
+      deccount[t] <- 0 + 1*(Norm(efpos[t+1,]-x1)<v/2) + 2*(Norm(efpos[t+1,]-x2)<v/2)
       dec <- deccount[t]
       if (t==nt) dec=3
     }
     trialresult <- list(efpos, deccount)
     
-    listoftraj[["effectorpos"]][[trnum]] <- efpos
+    efpossplinex <- spline(seq(from=0, to=100, length.out = t+1), efpos[,1], n=101)$y
+    efposspliney <- spline(seq(from=0, to=100, length.out = t+1), efpos[,2], n=101)$y
+    
+    efposspline <- rbind(x=efpossplinex, y=efposspliney)
+    
+    efposspline[1,] <- efposspline[1,]*(sin(30*pi/180)/efposspline[1,101])
+    efposspline[2,] <- efposspline[2,]*(sin(60*pi/180)/efposspline[2,101])
+
+    #get AUC of efpos
+    #recify termination coodinates to (0.5, 0.8660)
+    #measure AUC from simulated trajectory
+    listoftraj[["AUC"]][trnum] <- -polyarea(efposspline[1,], efposspline[2,])
+    listoftraj[["effectorpos"]][[trnum]] <- efposspline
     listoftraj[["targetreached"]][[trnum]] <- length(deccount)
     listoftraj[["decision"]][[trnum]] <- dec
+    
   }
   return(listoftraj)
 }
