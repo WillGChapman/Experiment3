@@ -1,5 +1,8 @@
 #plot difference between changing AUC with simple add, and coordinate shift
 
+#bad practice!
+rm(list=ls())
+
 #load libs
 library(tidyverse)
 library(R.matlab)
@@ -30,18 +33,15 @@ baselineIndex <- resultinfo3[DiffLogical & PLogical, "eventnumber"]
 explines <- resultdata3[baselineIndex,3:4,]
 
 trajs <- trajectories(walks = ranwalks(n_trials = 1024, n_time_samples = 500, drift_rate = 1, noise_sd = 1),
-                      decbound = 20, model4 = TRUE)
+                      decbound = 5, model4 = TRUE)
 
 simlines <- simplify2array(trajs$effectorpos)
 
 AUCOut <- getAUClist(explines, simlines)
 
 AUCOut %>%
-  
   drop_na() %>%
-  
   ggplot(aes(x=simAUC)) +
-  geom_line(aes(y=AUCadded-AUCmodcoord), colour='darkblue', size=1)+
-  ylab("Difference between modified coordinate and simple add")+
-  xlab("Simulated AUC")
+  geom_point(aes(y=AUCadded-AUCmodcoord), colour='darkblue', size=1)
+  geom_abline(slope=1, intercept = 0)
 
