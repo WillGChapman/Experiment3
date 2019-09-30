@@ -86,5 +86,3 @@ trajectories <- function(walks, decbound = 40, model4 = TRUE)
   }
   return(listoftraj)
 }
-
-trajs <- trajectories(walks)
