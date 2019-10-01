@@ -1,7 +1,5 @@
 #plot difference between changing AUC with simple add, and coordinate shift
 
-#bad practice!
-rm(list=ls())
 
 #load libs
 library(tidyverse)

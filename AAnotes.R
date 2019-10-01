@@ -2,6 +2,14 @@
 
 #check "realistic" movement speed from data (mean velocity probably fine)
 
+#load E3 data,
+
+MV <- resultinfo3$pathlengthnorm/resultinfo3$movetime
+
+plot(MV, resultinfo3$pathlengthnorm)
+
+#divide absolute path length by MT for each trial, and take a peek at the distrubution.
+
 #play with parameters of the model to match data (make straighter lines, force occasional mistakes)
 
 #then run some optimiser to get something reasonable
