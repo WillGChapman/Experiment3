@@ -1,4 +1,4 @@
-trajectories <- function(walks, decbound = 40, model4 = TRUE)
+trajectories <- function(walks, decbound = 40, model4 = TRUE, suppresscount=TRUE)
 {
   ntr <- dim(walks)[1]
   nt <- dim(walks)[2]
@@ -20,7 +20,7 @@ trajectories <- function(walks, decbound = 40, model4 = TRUE)
   #for each walk
   for (trnum in 1:ntr)
   {
-    if(rem(trnum,10)==0) {disp(num2str(trnum, fmt=0))}
+    if(rem(trnum,10)==0 & suppresscount==FALSE) {disp(num2str(trnum, fmt=0))}
     #focus position at start
     focus <- c(0,0)
     

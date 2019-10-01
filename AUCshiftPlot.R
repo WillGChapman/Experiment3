@@ -8,7 +8,7 @@ library(pracma)
 
 #source custom functions
 source("ranwalks.R")
-source("trajectories.R")
+source("trajectoriesRealGeometry.R")
 source("getAUClist.R")
 
 #import data
@@ -37,9 +37,11 @@ simlines <- simplify2array(trajs$effectorpos)
 
 AUCOut <- getAUClist(explines, simlines)
 
+
+#piping into ggplot does NOT give you a ggplot object to mess around with. hich is nice in it's own way.
 AUCOut %>%
   drop_na() %>%
   ggplot(aes(x=simAUC)) +
   geom_point(aes(y=AUCadded-AUCmodcoord), colour='darkblue', size=1)
-  geom_abline(slope=1, intercept = 0)
+
 

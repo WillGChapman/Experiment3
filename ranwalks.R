@@ -1,7 +1,7 @@
 #generate random walks
 
 # function line add vars - n_time, si, n_trials, drift_rate
-ranwalks <- function(n_trials, n_time_samples, drift_rate, noise_sd)
+ranwalks <- function(n_trials, n_time_samples, drift_rate, noise_sd, suppress.count=TRUE)
 {
   nt <- n_time_samples
   ntr <- n_trials
@@ -14,7 +14,7 @@ ranwalks <- function(n_trials, n_time_samples, drift_rate, noise_sd)
   
   for (itr in 1:ntr) 
   {
-    if(rem(itr,10)==0) {disp(num2str(itr, fmt=0))}
+    if(rem(itr,10)==0 & suppress.count==FALSE) {disp(num2str(itr, fmt=0))}
     
     target <- c(target, 2)
     
