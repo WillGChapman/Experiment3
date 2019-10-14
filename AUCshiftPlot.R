@@ -1,5 +1,8 @@
 #plot difference between changing AUC with simple add, and coordinate shift
 
+#bad practice!
+rm(list=ls())
+
 #load libs
 library(tidyverse)
 library(R.matlab)
@@ -37,9 +40,7 @@ simlines <- simplify2array(trajs$effectorpos)
 AUCOut <- getAUClist(explines, simlines)
 
 AUCOut %>%
-  
   drop_na() %>%
-  
   ggplot(aes(x=simAUC)) +
   geom_line(aes(y=AUCadded-AUCmodcoord), colour='darkblue', size=1)+
   ylab("Difference between modified coordinate and simple add")+
