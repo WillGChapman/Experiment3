@@ -1,7 +1,10 @@
 #plot difference between changing AUC with simple add, and coordinate shift
 
+<<<<<<< HEAD
 #bad practice!
 rm(list=ls())
+=======
+>>>>>>> 0695beeb829e22d7c86c377119508a324e51e884
 
 #load libs
 library(tidyverse)
@@ -10,7 +13,7 @@ library(pracma)
 
 #source custom functions
 source("ranwalks.R")
-source("trajectories.R")
+source("trajectoriesRealGeometry.R")
 source("getAUClist.R")
 
 #import data
@@ -33,16 +36,17 @@ baselineIndex <- resultinfo3[DiffLogical & PLogical, "eventnumber"]
 explines <- resultdata3[baselineIndex,3:4,]
 
 trajs <- trajectories(walks = ranwalks(n_trials = 1024, n_time_samples = 500, drift_rate = 1, noise_sd = 1),
-                      decbound = 20, model4 = TRUE)
+                      decbound = 5, model4 = TRUE)
 
 simlines <- simplify2array(trajs$effectorpos)
 
 AUCOut <- getAUClist(explines, simlines)
 
+
+#piping into ggplot does NOT give you a ggplot object to mess around with. hich is nice in it's own way.
 AUCOut %>%
   drop_na() %>%
   ggplot(aes(x=simAUC)) +
-  geom_line(aes(y=AUCadded-AUCmodcoord), colour='darkblue', size=1)+
-  ylab("Difference between modified coordinate and simple add")+
-  xlab("Simulated AUC")
+  geom_point(aes(y=AUCadded-AUCmodcoord), colour='darkblue', size=1)
+
 

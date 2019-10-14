@@ -60,8 +60,8 @@ getAUClist <- function(explines, simlines)
     diffy <- exptrajectory[2,]-seq(from=0, to=sind(60), length.out = 101)
     #recalculate AUCs
     
-    newx <- simtraj[1,] + diffx
-    newy <- simtraj[2,] + diffy
+    newx <- simtrajectory[1,] + diffx
+    newy <- simtrajectory[2,] + diffy
     
     AUCmodcoord <- -polyarea(newx, newy)
     
