@@ -1,11 +1,5 @@
 #plot difference between changing AUC with simple add, and coordinate shift
 
-<<<<<<< HEAD
-#bad practice!
-rm(list=ls())
-=======
->>>>>>> 0695beeb829e22d7c86c377119508a324e51e884
-
 #load libs
 library(tidyverse)
 library(R.matlab)
