@@ -29,8 +29,11 @@ baselineIndex <- resultinfo3[DiffLogical & PLogical, "eventnumber"]
 
 explines <- resultdata3[baselineIndex,3:4,]
 
-trajs <- trajectories(walks = ranwalks(n_trials = 1024, n_time_samples = 500, drift_rate = 1, noise_sd = 1),
-                      decbound = 5, model4 = TRUE)
+walks <- ranwalks(n_trials = 1024, n_time_samples = 500, drift_rate = 1, noise_sd = 1)
+
+trajs <- trajectories(walks,
+                      decbound = 5,
+                      model4 = TRUE)
 
 simlines <- simplify2array(trajs$effectorpos)
 

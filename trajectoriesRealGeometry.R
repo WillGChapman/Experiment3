@@ -65,6 +65,10 @@ trajectories <- function(walks, decbound = 40, model4 = TRUE, suppresscount=TRUE
       dec <- deccount[t]
       if (t==nt) dec=3
     }
+    
+    xflip <- 1
+    if (dec==1) xflip <- -1
+    
     trialresult <- list(efpos, deccount)
     
     efpossplinex <- spline(seq(from=0, to=100, length.out = t+1), efpos[,1], n=101)$y
@@ -76,10 +80,10 @@ trajectories <- function(walks, decbound = 40, model4 = TRUE, suppresscount=TRUE
     efposspline[2,] <- efposspline[2,]*(20/efposspline[2,101]) #sin(60*pi/180)
 
     #get AUC of efpos
-    #recify termination coodinates to (0.5, 0.8660)
+    #recify termination coodinates to (15,20)
     #measure AUC from simulated trajectory
     listoftraj[["AUC"]][trnum] <- -polyarea(efposspline[1,], efposspline[2,])
-    listoftraj[["effectorpos"]][[trnum]] <- efposspline
+    listoftraj[["effectorpos"]][[trnum]] <- rbind(x=xflip*efposspline[1,], y=efposspline[2,])
     listoftraj[["targetreached"]][[trnum]] <- length(deccount)
     listoftraj[["decision"]][[trnum]] <- dec
     
