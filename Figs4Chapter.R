@@ -51,6 +51,7 @@ lines(trajs$effectorpos[[biggestrightAUC]][1,], trajs$effectorpos[[biggestrightA
 
 decTimewrong <- trajs$targetreached[biggestwrongAUC]
 decTimeright <- trajs$targetreached[biggestrightAUC]
+<<<<<<< HEAD
 decTimemedright <- trajs$targetreached[medianrightAUC]
 
 #plot showing three walks
@@ -82,6 +83,19 @@ for (i in sample(cdIndex[2:numcorrect], 50))
 }
 
 plot(density(trajs$AUC[cdIndex]))
+=======
+
+#plot showing three walks
+plot(walks[biggestwrongAUC,1:45],
+     type='l',
+     ylim=c(-6, 20),
+     lty='dashed')
+lines(walks[medianrightAUC,1:45], lty='solid')
+lines(walks[biggestrightAUC,1:45], lty='dotdash')
+abline(h=5)
+abline(h=-5)
+
+>>>>>>> e2fd363aafefaecc39c58b39a402d0165a3760f6
 
 #don't go too much into model 2 or 3. present model 4 as is.
 
