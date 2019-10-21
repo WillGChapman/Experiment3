@@ -14,7 +14,6 @@ trajs <- trajectories(walks,
 wdIndex <- which(trajs$decision==1)
 cdIndex <- which(trajs$decision==2)
 
-wrongtrajs
 
 #plot some trajectories (wrong'uns only)
 plot(trajs$effectorpos[[wdIndex[1]]][1,], trajs$effectorpos[[wdIndex[1]]][2,],
@@ -67,7 +66,7 @@ decTimemedright <- trajs$targetreached[medianrightAUC]
 #plot showing three walks
 plot(walks[biggestwrongAUC,1:70],
      type='l',
-     ylim=c(-6, 35),
+     ylim=c(-6, 15),
      lty='dashed',
      ylab='decision variable',
      xlab='time')
@@ -140,7 +139,3 @@ lines(density(modifiedAUC))
 legend(x = 'topleft',
        lty = c('solid', 'dashed', 'dotdash'),legend = c('modified AUC', 'simulated AUC', 'observed AUC'),inset = 0.1)
 
-
-
-
-#get some walks
