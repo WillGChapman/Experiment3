@@ -76,8 +76,8 @@ trajectories <- function(walks, decbound = 40, model4 = TRUE, suppresscount=TRUE
     
     efposspline <- rbind(x=efpossplinex, y=efposspliney)
     
-    efposspline[1,] <- efposspline[1,]*(15/efposspline[1,101])#sin(30*pi/180)
-    efposspline[2,] <- efposspline[2,]*(20/efposspline[2,101]) #sin(60*pi/180)
+    efposspline[1,] <- efposspline[1,]*(0.15/efposspline[1,101])#sin(30*pi/180)
+    efposspline[2,] <- efposspline[2,]*(0.20/efposspline[2,101]) #sin(60*pi/180)
 
     #get AUC of efpos
     #recify termination coodinates to (15,20)

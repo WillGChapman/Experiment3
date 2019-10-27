@@ -1,4 +1,4 @@
-actionfocus <- function(onewalk, decbound = 40, model4 = TRUE, suppresscount=TRUE)
+actionfocus <- function(onewalk, decbound = 40, gain = 4, model4 = TRUE, suppresscount=TRUE)
 {
   nt <- length(onewalk)
   
@@ -16,9 +16,8 @@ actionfocus <- function(onewalk, decbound = 40, model4 = TRUE, suppresscount=TRU
   
   listoftraj <- list()
   
-  actionfocus <- array(data = NA, dim = c(nt,2))
-  positionatboundary <- c(0,0)
-  
+  actionfocus <- c(0,0)
+  positionatboundary <- c(x=0,y=0)
   #for the walk
   
   #focus position at start
@@ -30,11 +29,14 @@ actionfocus <- function(onewalk, decbound = 40, model4 = TRUE, suppresscount=TRU
   #reset decision flag and time count 
   dec <- 0
   t <- 0
+  zdec <- numeric()
+  zmod <- numeric()
   
   deccount <- numeric()
   
   while (dec==0)
   {
+    #print(positionatboundary)
     #x and y are coordinates
     t <- t+1 #increment timestep
     #get current efpos
@@ -44,15 +46,21 @@ actionfocus <- function(onewalk, decbound = 40, model4 = TRUE, suppresscount=TRU
     
     #get decision variable
     z <- onewalk[t]
+    zdec[t] <- z
+
+    #if z is over boundary
+    if(z>b[2]) if((positionatboundary==0)[1]) positionatboundary <- c(x=efposnow[1], y=efposnow[2])
     
     #model 4 bias on decision variable
-    z = z + 4*decbound*((Norm(efposnow-x1)-Norm(efposnow-x2))/(Norm(efposnow-x1)+Norm(efposnow-x2)))
+    z <- z + gain*decbound*((Norm(efposnow-x1)-Norm(efposnow-x2))/(Norm(efposnow-x1)+Norm(efposnow-x2)))
     
     ##
     
+    zmod[t] <- z
+    
     focus <- x1*(z<b[1]) + (x2*abs(b[1]-z)/abs(2*b[1]) + x1*abs(b[2]-z)/abs(2*b[2]))*(z>=b[1] & z<=b[2]) + x2*(z>b[2]) 
     
-    actionfocus[t,] <- focus
+    actionfocus <- rbind(actionfocus, focus)
     
     #focus is now either on a target, or somewhere between
     #now within each timestep the focus moves at v towards focus
@@ -60,10 +68,10 @@ actionfocus <- function(onewalk, decbound = 40, model4 = TRUE, suppresscount=TRU
     #get one v from old position to focus
     movedir <- (focus-efposnow)/Norm(focus-efposnow) #scaled direction of movement
     deltaXY <- v*movedir #movement by 1*v along direction
-    efpos <- rbind(efpos,efposnow + deltaXY) #change to effector position along movedir direction by v
     
-    #save position of boundary reached
-    if(z>b[1]) if((positionatboundary==0)[1]) positionatboundary <- efposnow
+    
+    #add noex effector location to efpos[t+1]
+    efpos <- rbind(efpos,efposnow + deltaXY) #change to effector position along movedir direction by v
     
     #has effector reached target? if so terminate while loop
     deccount[t] <- 0 + 1*(Norm(efpos[t+1,]-x1)<v/2) + 2*(Norm(efpos[t+1,]-x2)<v/2)
@@ -80,17 +88,26 @@ actionfocus <- function(onewalk, decbound = 40, model4 = TRUE, suppresscount=TRU
     
     efposspline <- rbind(x=efpossplinex, y=efposspliney)
     
-    efposspline[1,] <- efposspline[1,]*(15/efposspline[1,101])#sin(30*pi/180)
-    efposspline[2,] <- efposspline[2,]*(20/efposspline[2,101]) #sin(60*pi/180)
+    efposspline[1,] <- efposspline[1,]*(0.15/efposspline[1,101])#sin(30*pi/180)
+    efposspline[2,] <- efposspline[2,]*(0.20/efposspline[2,101]) #sin(60*pi/180)
     
     #get AUC of efpos
     #recify termination coodinates to (15,20)
     #measure AUC from simulated trajectory
+
+    timetobound <- which(cumsum(onewalk>decbound)==1)[1]
     
+    listoftraj[["AUC"]] <- -polyarea(efposspline[1,], efposspline[2,])
+    listoftraj[["effectorpos"]] <- rbind(x=xflip*efposspline[1,], y=efposspline[2,])
+    listoftraj[["targetreached"]] <- length(deccount)
+    listoftraj[["decision"]] <- dec
     listoftraj[["actionfocus"]] <- na.omit(actionfocus)
     listoftraj[["decision"]] <- dec
     listoftraj[["targetreached"]] <- t
+    listoftraj[["boundreached"]] <- timetobound
     listoftraj[["positionatboundary"]] <- positionatboundary
+    listoftraj[["zdec"]] <- zdec[1:timetobound]
+    listoftraj[["zmod"]] <- zmod
   }
   return(listoftraj)
 }
