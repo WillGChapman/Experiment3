@@ -5,13 +5,17 @@ source("ranwalks.R")
 #action focus plot
 
 #get ranwalks
-walks <- ranwalks(1024,500,1,1,F)
+#walks <- ranwalks(1024,500,1,1,F)
+
+
 
 #make trajectories
 
-decisionboundary <- 10
+decisionboundary <- 7
 
 walks <- ranwalks(n_trials = 1000, n_time_samples = 500, drift_rate = 1, noise_sd = 1)
+
+load("walksplot.RData")
 
 trajs <- trajectories(walks, decbound = decisionboundary)
 
@@ -20,7 +24,7 @@ wdIndex <- which(trajs$decision==1)
 cdIndex <- which(trajs$decision==2)
 
 #get some specific trajectories
-biggestwrongAUC <- wdIndex[which.max(trajs$AUC[wdIndex])]
+biggestwrongAUC <- wdIndex[which.min(trajs$AUC[wdIndex])]
 biggestrightAUC <- cdIndex[which.max(trajs$AUC[cdIndex])]
 medianrightAUC <- which(trajs$AUC==median(trajs$AUC[cdIndex]))
 
@@ -40,11 +44,7 @@ actfocusBR <- bigright$actionfocus
 actfocusMR <- medright$actionfocus
 actfocusBW <- bigwrong$actionfocus
 
-time <- bigright$targetreached
-time[2] <- bigwrong$targetreached
-time[3] <- medright$targetreached
-
-maxtime <- 5*ceiling(max(time)/5)
+maxtime <- 5*ceiling(max(c(bigright$targetreached, bigwrong$targetreached, medright$targetreached))/5)
 
 
 #layout of plots
@@ -56,53 +56,56 @@ layout(mat = matrix(c(1,2,3,1,2,3,4,4,4),
 
 #OK - panel 1
 #a random walk to absorbing boundary
-par(mar=c(2,2,2,2))
-plot(bigright$zdec,
+par(mar=c(2,4,4,0))
+plot(c(0,bigright$zdec),
      xlab='Time',
-     ylab='decision vairable',
+     ylab='Decision Variable',
      ylim=c(-(decisionboundary+5),(decisionboundary+5)),
      xlim=c(0,maxtime),
      type = 'l',
      lwd=2.5,
-     col=alpha('darkblue', 0.75))
+     col=alpha('darkblue', 0.75),
+     bty='n')
 abline(h = c(-decisionboundary,decisionboundary),lty='longdash')
-lines(bigwrong$zdec,
+lines(c(0,bigwrong$zdec),
       lwd=2.5,
       col=alpha('orange', 0.75))
-lines(medright$zdec,
+lines(c(0,medright$zdec),
       lwd=2.5,
       col=alpha('purple', 0.75))
 
 #panel 2
-par(mar=c(2,2,2,2))
-plot(bigright$zmod,
+par(mar=c(2,4,1,0))
+plot(c(0,bigright$zmod),
      xlab='Time',
-     ylab='decision variable with commitment',
+     ylab='DV with Commitment',
      ylim=c(-(decisionboundary+10),(decisionboundary+10)),
      xlim=c(0,maxtime),
      type = 'l',
      lwd=2.5,
-     col=alpha('darkblue', 0.75))
+     col=alpha('darkblue', 0.75),
+     bty='n')
 abline(h = c(-decisionboundary,decisionboundary),lty='longdash')
-lines(bigwrong$zmod,
+lines(c(0,bigwrong$zmod),
       lwd=2.5,
       col=alpha('orange', 0.75))
-lines(medright$zmod,
+lines(c(0,medright$zmod),
       lwd=2.5,
       col=alpha('purple', 0.75))
 
 
 #panel 3
 #the action focus
-par(mar=c(2,2,2,2))
+par(mar=c(5,4,1,0))
 plot(bigright$actionfocus[,1],
      ylim=c(0.2,-0.2),
-     ylab="Position of Action Focus",
+     ylab="Action Focus",
      xlim=c(0,maxtime),
      xlab="Time",
      type='l',
      lwd=2.5,
-     col=alpha('darkblue', 0.75))
+     col=alpha('darkblue', 0.75),
+     bty='n')
 lines(bigwrong$actionfocus[,1],
       lwd=2.5,
       col=alpha('orange', 0.75))
@@ -111,14 +114,15 @@ lines(medright$actionfocus[,1],
       col=alpha('purple', 0.75))
 
 #plot 4 showing three trajectories
-par(mar=c(2,2,2,3))
+par(mar=c(5,4,4,1))
 plot(t(bigright$effectorpos),
      type='l',
      xlim=c(-0.15,0.15),
      col=alpha(colour = 'darkblue', alpha = 0.75),
      lwd=2.5,
      xlab='x-position',
-     ylab='y-position')
+     ylab='y-position',
+     bty='n')
 lines(t(bigwrong$effectorpos),
       type='l',
       col=alpha(colour = 'orange', alpha = 0.75),
@@ -127,6 +131,10 @@ lines(t(medright$effectorpos),
       type='l',
       col=alpha(colour = 'purple', alpha = 0.75),
       lwd=2.5)
+legend("bottomleft", inset=0.02, title="Example Paths",
+       c("Rapid Correct Decision", "Slow Correct Decision", "Slow Incorrect Decision"),
+       col = c("purple", "darkblue", "orange"),
+       lwd=c(2.5,2.5,2.5))
 points(t(bigright$positionatboundary), pch=16,lwd=4, col='red')
 points(t(bigwrong$positionatboundary), pch=16,lwd=4, col='red')
 points(t(medright$positionatboundary), pch=16,lwd=4, col='red')

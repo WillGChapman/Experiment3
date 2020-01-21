@@ -47,7 +47,7 @@ actionfocus <- function(onewalk, decbound = 40, gain = 4, model4 = TRUE, suppres
     #get decision variable
     z <- onewalk[t]
     zdec[t] <- z
-
+    
     #if z is over boundary
     if(z>b[2]) if((positionatboundary==0)[1]) positionatboundary <- c(x=efposnow[1], y=efposnow[2])
     
@@ -77,38 +77,40 @@ actionfocus <- function(onewalk, decbound = 40, gain = 4, model4 = TRUE, suppres
     deccount[t] <- 0 + 1*(Norm(efpos[t+1,]-x1)<v/2) + 2*(Norm(efpos[t+1,]-x2)<v/2)
     dec <- deccount[t]
     if (t==nt) dec=3
-    
-    xflip <- 1
-    if (dec==1) xflip <- -1
-    
-    trialresult <- list(efpos, deccount)
-    
-    efpossplinex <- spline(seq(from=0, to=100, length.out = t+1), efpos[,1], n=101)$y
-    efposspliney <- spline(seq(from=0, to=100, length.out = t+1), efpos[,2], n=101)$y
-    
-    efposspline <- rbind(x=efpossplinex, y=efposspliney)
-    
-    efposspline[1,] <- efposspline[1,]*(0.15/efposspline[1,101])#sin(30*pi/180)
-    efposspline[2,] <- efposspline[2,]*(0.20/efposspline[2,101]) #sin(60*pi/180)
-    
-    #get AUC of efpos
-    #recify termination coodinates to (15,20)
-    #measure AUC from simulated trajectory
-
-    timetobound <- which(cumsum(onewalk>decbound)==1)[1]
-    
-    listoftraj[["AUC"]] <- -polyarea(efposspline[1,], efposspline[2,])
-    listoftraj[["effectorpos"]] <- rbind(x=xflip*efposspline[1,], y=efposspline[2,])
-    listoftraj[["targetreached"]] <- length(deccount)
-    listoftraj[["decision"]] <- dec
-    listoftraj[["actionfocus"]] <- na.omit(actionfocus)
-    listoftraj[["decision"]] <- dec
-    listoftraj[["targetreached"]] <- t
-    listoftraj[["boundreached"]] <- timetobound
-    listoftraj[["positionatboundary"]] <- positionatboundary
-    listoftraj[["zdec"]] <- zdec[1:timetobound]
-    listoftraj[["zmod"]] <- zmod
   }
+  
+  xflip <- 1
+  if (dec==1) xflip <- -1
+  
+  trialresult <- list(efpos, deccount)
+  
+  efpossplinex <- spline(seq(from=0, to=100, length.out = t+1), efpos[,1], n=101)$y
+  efposspliney <- spline(seq(from=0, to=100, length.out = t+1), efpos[,2], n=101)$y
+  
+  efposspline <- rbind(x=efpossplinex, y=efposspliney)
+  
+  efposspline[1,] <- efposspline[1,]*(0.15/efposspline[1,101])#sin(30*pi/180)
+  efposspline[2,] <- efposspline[2,]*(0.20/efposspline[2,101]) #sin(60*pi/180)
+  
+  #get AUC of efpos
+  #recify termination coodinates to (15,20)
+  #measure AUC from simulated trajectory
+  
+  timetobound <- which(cumsum(onewalk>decbound)==1)[1]
+  timetofocus <- which(efpos==efposnow)[1]
+  
+  listoftraj[["AUC"]] <- -polyarea(efposspline[1,], efposspline[2,])
+  listoftraj[["effectorpos"]] <- rbind(x=xflip*efposspline[1,], y=efposspline[2,])
+  listoftraj[["targetreached"]] <- length(deccount)
+  listoftraj[["decision"]] <- dec
+  listoftraj[["actionfocus"]] <- na.omit(actionfocus)
+  listoftraj[["decision"]] <- dec
+  listoftraj[["targetreached"]] <- t
+  listoftraj[["boundreached"]] <- timetobound
+  listoftraj[["positionatboundary"]] <- positionatboundary
+  listoftraj[["zdec"]] <- zdec[1:timetobound]
+  listoftraj[["zmod"]] <- zmod
+
   return(listoftraj)
 }
 
