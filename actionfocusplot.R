@@ -13,9 +13,9 @@ source("ranwalks.R")
 
 decisionboundary <- 7
 
-walks <- ranwalks(n_trials = 1000, n_time_samples = 500, drift_rate = 1, noise_sd = 1)
+walks <- ranwalks(n_trials = 10000, n_time_samples = 500, drift_rate = 1, noise_sd = 1)
 
-load("walksplot.RData")
+#load("walksplot.RData")
 
 trajs <- trajectories(walks, decbound = decisionboundary)
 
@@ -98,7 +98,7 @@ lines(c(0,medright$zmod),
 #the action focus
 par(mar=c(5,4,1,0))
 plot(bigright$actionfocus[,1],
-     ylim=c(0.2,-0.2),
+     ylim=c(-0.2,0.2),
      ylab="Action Focus",
      xlim=c(0,maxtime),
      xlab="Time",
@@ -135,6 +135,6 @@ legend("bottomleft", inset=0.02, title="Example Paths",
        c("Rapid Correct Decision", "Slow Correct Decision", "Slow Incorrect Decision"),
        col = c("purple", "darkblue", "orange"),
        lwd=c(2.5,2.5,2.5))
-points(t(bigright$positionatboundary), pch=16,lwd=4, col='red')
-points(t(bigwrong$positionatboundary), pch=16,lwd=4, col='red')
-points(t(medright$positionatboundary), pch=16,lwd=4, col='red')
+points(t(bigright$positionatstable), pch=16,lwd=4, col='red')
+points(t(bigwrong$positionatstable), pch=16,lwd=4, col='red')
+points(t(medright$positionatstable), pch=16,lwd=4, col='red')

@@ -26,6 +26,8 @@ actionfocus <- function(onewalk, decbound = 40, gain = 4, model4 = TRUE, suppres
   #effector position at start
   efpos <- matrix(c(0,0), ncol=2)  
   
+  focus_stable <- 0
+  
   #reset decision flag and time count 
   dec <- 0
   t <- 0
@@ -59,6 +61,15 @@ actionfocus <- function(onewalk, decbound = 40, gain = 4, model4 = TRUE, suppres
     zmod[t] <- z
     
     focus <- x1*(z<b[1]) + (x2*abs(b[1]-z)/abs(2*b[1]) + x1*abs(b[2]-z)/abs(2*b[2]))*(z>=b[1] & z<=b[2]) + x2*(z>b[2]) 
+    
+    if(t>1 & focus_stable==0)
+    {
+      if (actionfocus[t,1]==focus[1])
+      {
+        positionatstable <- c(x=efposnow[1], y=efposnow[2])
+        focus_stable <- 1
+      }
+    }
     
     actionfocus <- rbind(actionfocus, focus)
     
@@ -108,6 +119,7 @@ actionfocus <- function(onewalk, decbound = 40, gain = 4, model4 = TRUE, suppres
   listoftraj[["targetreached"]] <- t
   listoftraj[["boundreached"]] <- timetobound
   listoftraj[["positionatboundary"]] <- positionatboundary
+  listoftraj[["positionatstable"]] <- positionatstable
   listoftraj[["zdec"]] <- zdec[1:timetobound]
   listoftraj[["zmod"]] <- zmod
 

@@ -1,11 +1,11 @@
-trajectories <- function(walks, decbound = 40, model4 = TRUE, suppresscount=TRUE)
+trajectories <- function(walks, decbound = 40, gain = 4, model4 = TRUE, suppresscount=TRUE, movementvelocity = 0.0076)
 {
   ntr <- dim(walks)[1]
   nt <- dim(walks)[2]
   
   b <- c(-decbound,decbound)#c(-1,1)
   
-  v <- 0.0076 #movement velocity (metres/sample) - taken from mean of 
+  v <- movementvelocity #movement velocity (metres/sample) - taken from mean of 
   w <- 0.3    #width between targets (metres)
   ht <- 0.2 #height of targets (metres)
   
@@ -46,7 +46,7 @@ trajectories <- function(walks, decbound = 40, model4 = TRUE, suppresscount=TRUE
       z <- walks[trnum,t]
       
       #model 4 bias on decision variable
-      if (model4==TRUE) z = z + 4*decbound*((Norm(efposnow-x1)-Norm(efposnow-x2))/(Norm(efposnow-x1)+Norm(efposnow-x2)))
+      if (model4==TRUE) z = z + gain*decbound*((Norm(efposnow-x1)-Norm(efposnow-x2))/(Norm(efposnow-x1)+Norm(efposnow-x2)))
       
       ##
       
