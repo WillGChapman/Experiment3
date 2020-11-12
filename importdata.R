@@ -4,9 +4,10 @@ library(Rmisc)
 library(tidyverse)
 library(doBy)
 library(pracma)
+library(scales)
+library(plotfunctions)
 
 rm(list=ls())
-
 
 #rerun these if you need to
 resultdata1 <- readMat("Data\resultdata1.mat")

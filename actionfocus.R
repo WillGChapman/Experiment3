@@ -68,6 +68,7 @@ actionfocus <- function(onewalk, decbound = 40, gain = 4, model4 = TRUE, suppres
       {
         positionatstable <- c(x=efposnow[1], y=efposnow[2])
         focus_stable <- 1
+        time_stable <- t
       }
     }
     
@@ -120,6 +121,7 @@ actionfocus <- function(onewalk, decbound = 40, gain = 4, model4 = TRUE, suppres
   listoftraj[["boundreached"]] <- timetobound
   listoftraj[["positionatboundary"]] <- positionatboundary
   listoftraj[["positionatstable"]] <- positionatstable
+  listoftraj[["timeatstable"]] <- time_stable
   listoftraj[["zdec"]] <- zdec[1:timetobound]
   listoftraj[["zmod"]] <- zmod
 

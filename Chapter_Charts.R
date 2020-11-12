@@ -1,4 +1,12 @@
 #let's make a pipeline for testing parameters.
+
+#make sure we have the right functions loaded
+source("modifyAUC.R")
+source("ranwalks.R")
+source("actionfocus.R")
+source("trajectoriesRealGeometry.R")
+source("figlabel.R")
+
 #get a nice colour pallette
 #####
 install.packages("wesanderson")
@@ -8,12 +16,16 @@ pal <- wes_palette("FantasticFox1", 25, type = "continuous")
 
 #Fig 3 – Stochastic Model of trajectories and AUC distributions
 #####
+
+#initial parameter values
 decisionboundary <- 7
 drift <- 1
 noise <- 1
 
+#generate random walks
 walks <- ranwalks(n_trials = 10000, n_time_samples = 500, drift_rate = drift, noise_sd = noise)
 
+#container for walks with varying drift
 walksvardrift <- array(dim=c(10,10000,500))
 
 trajslist <- list()
@@ -349,7 +361,7 @@ for (i in (length(gainsequence)-1):1)
 
 #####
 
-# four distributions in a panel plot.
+# 9 distributions in a panel plot.
 pal <- wes_palette("FantasticFox1", 9, type = "continuous")
 
 # boundary: 5 to 20

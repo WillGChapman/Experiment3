@@ -25,3 +25,4 @@ ranwalks <- function(n_trials, n_time_samples, drift_rate, noise_sd, suppress.co
   }
   return(z)
 }
+
